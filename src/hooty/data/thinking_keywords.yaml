@@ -1,0 +1,24 @@
+# Default thinking keyword → budget level mapping.
+# Users can override per-level via config.yaml reasoning.keywords section.
+level1:
+  - think
+  - 考えて
+level2:
+  - think a lot
+  - think deeply
+  - think hard
+  - think more
+  - megathink
+  - もっと考えて
+  - たくさん考えて
+  - よく考えて
+  - 長考
+level3:
+  - think harder
+  - think longer
+  - think really hard
+  - think very hard
+  - ultrathink
+  - 熟考
+  - 深く考えて
+  - しっかり考えて

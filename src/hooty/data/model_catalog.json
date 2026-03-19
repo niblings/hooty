@@ -1,0 +1,565 @@
+{
+  "_metadata": {
+    "source": "litellm/model_prices_and_context_window.json",
+    "updated_at": "2026-03-18T01:42:06.864176+00:00"
+  },
+  "anthropic": {
+    "claude-4-opus-20250514": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-4-sonnet-20250514": {
+      "max_input_tokens": 1000000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-haiku-4-5": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-haiku-4-5-20251001": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-opus-4-1": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-opus-4-1-20250805": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-opus-4-20250514": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-opus-4-5": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-opus-4-5-20251101": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-opus-4-6": {
+      "max_input_tokens": 1000000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-opus-4-6-20260205": {
+      "max_input_tokens": 1000000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-sonnet-4-20250514": {
+      "max_input_tokens": 1000000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-sonnet-4-5": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-sonnet-4-5-20250929": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-sonnet-4-5-20250929-v1:0": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-sonnet-4-6": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    }
+  },
+  "bedrock": {
+    "anthropic.claude-haiku-4-5-20251001-v1:0": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "anthropic.claude-haiku-4-5@20251001": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "anthropic.claude-opus-4-1-20250805-v1:0": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "anthropic.claude-opus-4-20250514-v1:0": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "anthropic.claude-opus-4-5-20251101-v1:0": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "anthropic.claude-opus-4-6-v1": {
+      "max_input_tokens": 1000000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "anthropic.claude-sonnet-4-20250514-v1:0": {
+      "max_input_tokens": 1000000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "anthropic.claude-sonnet-4-5-20250929-v1:0": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "anthropic.claude-sonnet-4-6": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    }
+  },
+  "azure": {
+    "Llama-4-Maverick-17B-128E-Instruct-FP8": {
+      "max_input_tokens": 1000000,
+      "supports_vision": true,
+      "supports_function_calling": true
+    },
+    "Llama-4-Scout-17B-16E-Instruct": {
+      "max_input_tokens": 10000000,
+      "supports_vision": true,
+      "supports_function_calling": true
+    },
+    "claude-haiku-4-5": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-opus-4-1": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-opus-4-5": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-opus-4-6": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-sonnet-4-5": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "claude-sonnet-4-6": {
+      "max_input_tokens": 200000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "grok-3": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true
+    },
+    "grok-3-mini": {
+      "max_input_tokens": 131072,
+      "supports_reasoning": true,
+      "supports_function_calling": true
+    },
+    "grok-4": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "grok-4-1-fast-non-reasoning": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "grok-4-1-fast-reasoning": {
+      "max_input_tokens": 131072,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "grok-4-fast-non-reasoning": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "grok-4-fast-reasoning": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "grok-code-fast-1": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    }
+  },
+  "azure_openai": {
+    "gpt-5": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-2025-08-07": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-chat": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-chat-latest": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-codex": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-mini": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-mini-2025-08-07": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-nano": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-nano-2025-08-07": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-pro": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-2025-11-13": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-chat": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-chat-2025-11-13": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-codex": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-codex-2025-11-13": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-codex-max": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-codex-mini": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-codex-mini-2025-11-13": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-2025-12-11": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-chat": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-chat-2025-12-11": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-codex": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-pro": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-pro-2025-12-11": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.3-chat": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.3-codex": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.4": {
+      "max_input_tokens": 1050000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.4-2026-03-05": {
+      "max_input_tokens": 1050000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.4-pro": {
+      "max_input_tokens": 1050000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true
+    },
+    "gpt-5.4-pro-2026-03-05": {
+      "max_input_tokens": 1050000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true
+    }
+  },
+  "ollama": {
+    "llama3.1": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true
+    },
+    "llama3.1:8b": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true
+    },
+    "llama3.1:70b": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true
+    },
+    "llama3.2": {
+      "max_input_tokens": 131072
+    },
+    "llama3.3": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true
+    },
+    "llama3.3:70b": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true
+    },
+    "codellama": {
+      "max_input_tokens": 16384
+    },
+    "codellama:13b": {
+      "max_input_tokens": 16384
+    },
+    "mistral": {
+      "max_input_tokens": 32768,
+      "supports_function_calling": true
+    },
+    "mixtral": {
+      "max_input_tokens": 32768,
+      "supports_function_calling": true
+    },
+    "qwen3.5:4b": {
+      "max_input_tokens": 262144,
+      "supports_function_calling": true
+    },
+    "qwen3.5:9b": {
+      "max_input_tokens": 262144,
+      "supports_function_calling": true
+    },
+    "qwen2.5-coder": {
+      "max_input_tokens": 32768
+    },
+    "qwen2.5-coder:7b": {
+      "max_input_tokens": 32768
+    },
+    "deepseek-coder-v2": {
+      "max_input_tokens": 131072,
+      "supports_function_calling": true
+    },
+    "gemma2": {
+      "max_input_tokens": 8192
+    },
+    "gemma2:9b": {
+      "max_input_tokens": 8192
+    }
+  }
+}
