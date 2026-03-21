@@ -87,6 +87,11 @@ providers:
     max_input_tokens: 128000    # コンテキストウィンドウ上書き（省略可）
     # api_key は環境変数で設定
 
+  openai:
+    model_id: gpt-5.2           # デフォルトモデル
+    max_input_tokens: 128000    # コンテキストウィンドウ上書き（省略可）
+    # api_key は環境変数で設定
+
   ollama:
     model_id: qwen3.5:9b        # デフォルトモデル
     host: ""                    # 空 = localhost:11434
@@ -236,6 +241,13 @@ roles:
 | `api_version` | `string` | `"2024-10-21"` | API バージョン |
 | `max_input_tokens` | `int` | `null` | コンテキストウィンドウサイズの上書き（省略時は同梱カタログ → 200,000） |
 
+#### `providers.openai` セクション
+
+| フィールド | 型 | デフォルト | 説明 |
+|---|---|---|---|
+| `model_id` | `string` | `"gpt-5.2"` | OpenAI モデル ID |
+| `max_input_tokens` | `int` | `null` | コンテキストウィンドウサイズの上書き（省略時は同梱カタログ → 200,000） |
+
 #### `providers.ollama` セクション
 
 | フィールド | 型 | デフォルト | 説明 |
@@ -251,7 +263,7 @@ roles:
 
 | フィールド | 型 | 必須 | 説明 |
 |---|---|---|---|
-| `provider` | `string` | ✓ | プロバイダ名: `"anthropic"` / `"bedrock"` / `"azure"` / `"azure_openai"` / `"ollama"` |
+| `provider` | `string` | ✓ | プロバイダ名: `"anthropic"` / `"bedrock"` / `"azure"` / `"azure_openai"` / `"openai"` / `"ollama"` |
 | `model_id` | `string` | ✓ | モデル ID |
 | `region` | `string` | | Bedrock: AWS リージョンのオーバーライド |
 | `endpoint` | `string` | | Azure / Azure OpenAI: エンドポイントのオーバーライド |
@@ -315,7 +327,7 @@ hooty:
 |---|---|---|---|
 | `auto_compact` | `bool` | `true` | コンテキスト使用率が閾値を超えたとき自動でセッション履歴を圧縮する |
 | `auto_compact_threshold` | `float` | `0.7` | auto-compact のトリガー閾値（0.0–1.0、コンテキストウィンドウの使用率） |
-| `cache_system_prompt` | `bool` | `true` | **Claude 系プロバイダ専用**。Anthropic / Bedrock Claude モデルのシステムプロンプトに `cache_control: {"type": "ephemeral"}` を付与し、2ターン目以降でキャッシュヒット（読み取りコスト 0.1x）する。Azure AI Foundry 経由で Claude を使う場合、`Provider.ANTHROPIC` + `base_url` 設定時のみ有効（`Provider.AZURE` 経由では SDK 制約により無効）。**他の全プロバイダ（Azure OpenAI, Azure AI Foundry の非 Claude モデル, Ollama）はサーバー側で自動的にキャッシュが適用されるため、本設定は無視される** |
+| `cache_system_prompt` | `bool` | `true` | **Claude 系プロバイダ専用**。Anthropic / Bedrock Claude モデルのシステムプロンプトに `cache_control: {"type": "ephemeral"}` を付与し、2ターン目以降でキャッシュヒット（読み取りコスト 0.1x）する。Azure AI Foundry 経由で Claude を使う場合、`Provider.ANTHROPIC` + `base_url` 設定時のみ有効（`Provider.AZURE` 経由では SDK 制約により無効）。**他の全プロバイダ（Azure OpenAI, OpenAI, Azure AI Foundry の非 Claude モデル, Ollama）はサーバー側で自動的にキャッシュが適用されるため、本設定は無視される** |
 | `resume_history` | `int` | `1` | `--resume` / `--continue` でセッション復元時に再表示する過去 Q&A ペアの件数。`0` で無効化 |
 
 ```yaml
@@ -421,7 +433,7 @@ agno:
 ネイティブ推論の制御。モデルカタログの `supports_reasoning` フラグで対応モデルを判定する（プロバイダ非依存）。カタログ未登録モデルは以下のフォールバックルールで判定:
 
 - **Anthropic**（直接 API / Azure AI Foundry 経由）: Extended Thinking（`model.thinking`）。Haiku 3/3.5 を除く Claude モデル
-- **Azure OpenAI**: Reasoning Effort（`model.reasoning_effort`）。GPT-5.2 以降（バリアント含む: chat, codex, pro, mini 等）
+- **Azure OpenAI / OpenAI**: Reasoning Effort（`model.reasoning_effort`）。GPT-5.2 以降（バリアント含む: chat, codex, pro, mini 等）
 - **Bedrock / Azure AI Foundry**: カタログに `supports_reasoning: true` があるモデル（Claude, Grok reasoning 系等）
 
 | フィールド | 型 | デフォルト | 説明 |
@@ -544,6 +556,7 @@ LLM API の HTTP タイムアウトを全プロバイダ共通で設定する。
 | AWS Bedrock (Claude) | anthropic SDK | 同上 |
 | AWS Bedrock (非 Claude) | boto3 | `botocore.config.Config` |
 | Azure OpenAI | openai SDK | `httpx.Timeout` via `client_params` |
+| OpenAI | openai SDK | `httpx.Timeout` via `client_params` |
 | Ollama | ollama | 未適用（ローカル実行） |
 
 サブエージェントは常にストリーミングモード（`stream: true`）で実行されるため、`streaming_read` が適用される。
@@ -782,6 +795,7 @@ databases.yaml はスラッシュコマンドで管理する:
 | `AZURE_OPENAI_ENDPOINT` | `providers.azure_openai.endpoint` | Azure OpenAI Service エンドポイント URL |
 | `AZURE_OPENAI_DEPLOYMENT` | `providers.azure_openai.deployment` | Azure OpenAI デプロイメント名 |
 | `AZURE_OPENAI_API_VERSION` | `providers.azure_openai.api_version` | Azure OpenAI API バージョン |
+| `OPENAI_API_KEY` | OpenAI API キー | OpenAI 直接 API の認証キー |
 | `OLLAMA_HOST` | `providers.ollama.host` | Ollama サーバーアドレス |
 | `GITHUB_ACCESS_TOKEN` | GitHub トークン | GitHub API の認証 |
 
@@ -868,6 +882,7 @@ CLI 引数は全ての設定を上書きする（最高優先度）。
 | `bedrock` | `AWS_BEARER_TOKEN_BEDROCK`、または `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY`、または `sso_auth: true` |
 | `azure` | `AZURE_API_KEY` + `endpoint`（YAML または `AZURE_ENDPOINT`） |
 | `azure_openai` | `AZURE_OPENAI_API_KEY` + `endpoint` + `deployment`（YAML または環境変数） |
+| `openai` | `OPENAI_API_KEY` |
 | `ollama` | なし（ローカル実行のため認証不要） |
 
 バリデーション失敗時のメッセージ例:

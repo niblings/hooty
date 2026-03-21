@@ -385,6 +385,11 @@ def _apply_provider_config(
             config.azure_openai.api_version = cfg["api_version"]
         if "max_input_tokens" in cfg:
             config.azure_openai.max_input_tokens = cfg["max_input_tokens"]
+    elif provider_name == "openai":
+        if "model_id" in cfg:
+            config.openai.model_id = cfg["model_id"]
+        if "max_input_tokens" in cfg:
+            config.openai.max_input_tokens = cfg["max_input_tokens"]
 
 
 # ---------------------------------------------------------------------------

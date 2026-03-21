@@ -67,6 +67,7 @@ HOOTY1:abcdefghijklmnop...
 | Anthropic（Azure AI 経由） | `ANTHROPIC_API_KEY` | `base_url` 設定時 |
 | Azure AI Foundry | `AZURE_API_KEY` | `endpoint` 必須 |
 | Azure OpenAI | `AZURE_OPENAI_API_KEY` | `endpoint` 必須 |
+| OpenAI | `OPENAI_API_KEY` | |
 | Bedrock（IAM） | `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | |
 | Bedrock（SSO） | — | `sso_auth: true`（キー不要） |
 | Bedrock（Bearer） | — | 対象外（利用者が環境変数で設定） |

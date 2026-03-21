@@ -1,7 +1,7 @@
 {
   "_metadata": {
     "source": "litellm/model_prices_and_context_window.json",
-    "updated_at": "2026-03-18T01:42:06.864176+00:00"
+    "updated_at": "2026-03-20T13:25:18.727270+00:00"
   },
   "anthropic": {
     "claude-4-opus-20250514": {
@@ -486,6 +486,20 @@
       "supports_function_calling": true,
       "supports_response_schema": true
     },
+    "gpt-5.4-mini": {
+      "max_input_tokens": 1050000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.4-nano": {
+      "max_input_tokens": 1050000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
     "gpt-5.4-pro": {
       "max_input_tokens": 1050000,
       "supports_vision": true,
@@ -560,6 +574,218 @@
     },
     "gemma2:9b": {
       "max_input_tokens": 8192
+    }
+  },
+  "openai": {
+    "gpt-5": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-2025-08-07": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-chat": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-chat-latest": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-codex": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-mini": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-mini-2025-08-07": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-nano": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-nano-2025-08-07": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-pro": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-pro-2025-10-06": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-search-api": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5-search-api-2025-10-14": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-2025-11-13": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-chat-latest": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-codex": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-codex-max": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.1-codex-mini": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-2025-12-11": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-chat-latest": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-codex": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-pro": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.2-pro-2025-12-11": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.3-chat-latest": {
+      "max_input_tokens": 128000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.3-codex": {
+      "max_input_tokens": 272000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.4": {
+      "max_input_tokens": 1050000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.4-2026-03-05": {
+      "max_input_tokens": 1050000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true,
+      "supports_response_schema": true
+    },
+    "gpt-5.4-pro": {
+      "max_input_tokens": 1050000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true
+    },
+    "gpt-5.4-pro-2026-03-05": {
+      "max_input_tokens": 1050000,
+      "supports_vision": true,
+      "supports_reasoning": true,
+      "supports_function_calling": true
     }
   }
 }

@@ -6,7 +6,7 @@ Interactive AI coding assistant CLI built on the [Agno](https://github.com/agno-
 
 ```
    ,___,
-   (o,o)    Hooty v0.6.8
+   (o,o)    Hooty
    /)  )    Interactive AI coding assistant
   --""--    powered by Agno
 ```
@@ -15,7 +15,7 @@ Interactive AI coding assistant CLI built on the [Agno](https://github.com/agno-
 
 - **REPL Interface** - Rich-based terminal UI with Markdown streaming, Planning / Coding dual-mode
 - **Non-Interactive Mode** - `hooty -p "prompt"` for one-shot execution; supports pipe input for scripts and CI/CD
-- **Multi-Provider Support** - Anthropic / Azure AI Foundry / Azure OpenAI / AWS Bedrock / Ollama; switch models mid-session with `/model`
+- **Multi-Provider Support** - Anthropic / Azure AI Foundry / Azure OpenAI / OpenAI / AWS Bedrock / Ollama; switch models mid-session with `/model`
 - **Coding Tools** - Built-in file read/write/edit, shell execution, code search (grep / find / ls); Safe mode (default ON) shows confirmation dialogs for dangerous operations
 - **Context Files** - Global instructions (`~/.hooty/hooty.md`) and project-specific instructions (`AGENTS.md` / `CLAUDE.md` etc.) for custom LLM directives; compatible with other tools' instruction files
 - **Session Management** - Persistent conversation history with restore, fork, and automatic context window compaction

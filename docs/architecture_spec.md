@@ -2,7 +2,7 @@
 
 ## 概要
 
-**Hooty** は ターミナル上で動作する対話型 CLI ツールである。Python + Agno フレームワーク上に構築し、LLM プロバイダとして AWS Bedrock / Azure AI Foundry / Azure OpenAI Service / Ollama をサポートする。
+**Hooty** は ターミナル上で動作する対話型 CLI ツールである。Python + Agno フレームワーク上に構築し、LLM プロバイダとして AWS Bedrock / Azure AI Foundry / Azure OpenAI Service / OpenAI / Ollama をサポートする。
 
 ## システム構成図
 
@@ -26,10 +26,12 @@
 │           └───┬───────┬───┘  └──┬──┬──┬──┬───┘  │
 │               │       │        │  │  │  │       │
 │               ▼       ▼        ▼  ▼  ▼  ▼       │
-│           ┌──────┐┌──────┐┌──────┐┌──────┐        │
-│           │Azure ││Azure ││Bedro-││Olla- │ File  │
-│           │AI    ││OpenAI││ck    ││ma    │ Shell │
-│           └──────┘└──────┘└──────┘└──────┘ GH MCP│
+│           ┌──────┐┌──────┐┌──────┐┌──────┐┌──────┐  │
+│           │Azure ││Azure ││Bedro-││Open- ││Olla- │  │
+│           │AI    ││OpenAI││ck    ││AI    ││ma    │  │
+│           └──────┘└──────┘└──────┘└──────┘└──────┘  │
+│                                          File Shell │
+│                                          GH MCP     │
 │                                                 │
 │  ┌──────────────────────────────────────────┐   │
 │  │              config.py                   │   │
@@ -131,6 +133,7 @@ main.py
               ├── providers.py       LLM モデルを生成する
               │     ├── agno.models.azure.AzureAIFoundry
               │     ├── agno.models.azure.openai_chat.AzureOpenAI
+              │     ├── agno.models.openai.OpenAIChat
               │     └── agno.models.aws.AwsBedrock
               ├── tools/__init__.py  ツール群を組み立てる
               │     ├── coding_tools.py   → agno.tools.coding.CodingTools
@@ -258,7 +261,7 @@ repl.py: 次の入力待ち
 | レイヤー | 技術 |
 |---|---|
 | AI エージェント | Agno (`agno.agent.Agent`) |
-| LLM プロバイダ | AWS Bedrock / Azure AI Foundry / Azure OpenAI Service |
+| LLM プロバイダ | AWS Bedrock / Azure AI Foundry / Azure OpenAI Service / OpenAI / Ollama |
 | CLI フレームワーク | Typer |
 | ターミナル UI | Rich |
 | 設定管理 | PyYAML + python-dotenv |

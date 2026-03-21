@@ -107,6 +107,10 @@ def get_context_limit(config: AppConfig) -> int:
         model_id = config.azure_openai.model_id
         if config.azure_openai.max_input_tokens:
             return config.azure_openai.max_input_tokens
+    elif config.provider.value == "openai":
+        model_id = config.openai.model_id
+        if config.openai.max_input_tokens:
+            return config.openai.max_input_tokens
     elif config.provider.value == "ollama":
         model_id = config.ollama.model_id
         if config.ollama.max_input_tokens:

@@ -2,6 +2,25 @@
 
 [Keep a Changelog](https://keepachangelog.com/) 形式に準拠。
 
+## [0.6.9] — 2026-03-21
+
+### Added
+
+- **`/copy` コマンド** — 直前の LLM 応答をクリップボードにコピー。`/copy N` で N 番目に新しい応答を指定可能。Windows / WSL2 / macOS / Linux 対応（Windows/WSL2 は PowerShell + Base64 パイプで文字化けを回避）
+  - `clipboard.py`: `write_clipboard()` 関数追加。`detect_platform()` を再利用し、Windows/WSL2 は `_write_clipboard_powershell()` で Base64 エンコード経由、macOS は `pbcopy`、Linux は `xclip` / `xsel` フォールバック
+  - `commands/misc.py`: `cmd_copy()` ハンドラ追加。N=1 は `get_last_response_text()` から高速取得、N≧2 は `conversation_log.load_recent_history()` で JSONL から取得
+  - `repl.py`: `SLASH_COMMANDS` / `handlers` に `/copy` 登録
+  - `docs/user_guide.md`: コマンド一覧に `/copy` 追加
+
+- **OpenAI 直接 API プロバイダ** — `openai` プロバイダを追加。`api.openai.com` 経由で GPT-5 シリーズを直接利用可能に。Azure OpenAI Service（`azure_openai`）経由に加え、OpenAI の直接 API にも対応
+  - `config.py`: `Provider.OPENAI` enum 値、`OpenAIConfig` dataclass、`AppConfig.openai` フィールド追加。`_apply_yaml()` / `activate_profile()` / `validate_config()` / `supports_thinking()` / `supports_vision()` に `openai` ブランチ追加
+  - `providers.py`: `_create_openai_model()` ファクトリ関数追加（`agno.models.openai.OpenAIChat` を使用）
+  - `model_catalog.py`: `get_context_limit()` に `openai` ブランチ追加
+  - `scripts/update_model_catalog.py`: LiteLLM からトップレベル `gpt-5+` キーを `openai` セクションとして抽出するロジック追加
+  - `src/hooty/data/model_catalog.json`: `openai` セクション自動生成（31 モデル）
+  - `pyproject.toml`: `openai = ["openai"]` extra 追加、`all` extra に `openai` 追加
+  - `docs/provider_spec.md`: OpenAI セクション追加（認証・設定例・reasoning 対応・必要パッケージ）
+
 ## [0.6.8] — 2026-03-18
 
 ### Added

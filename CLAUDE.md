@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-Hooty — 対話型 AI コーディングアシスタント CLI。Python + Agno フレームワーク。LLM プロバイダとして AWS Bedrock / Azure AI Foundry をサポート。
+Hooty — 対話型 AI コーディングアシスタント CLI。Python + Agno フレームワーク。LLM プロバイダとして AWS Bedrock / Azure AI Foundry / Azure OpenAI / OpenAI / Ollama をサポート。
 
 ## 開発コマンド
 

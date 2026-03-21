@@ -465,6 +465,14 @@ def setup_generate(
         }
         providers["azure_openai"] = ProviderCredential(config=aoai_cfg, env=aoai_env)
 
+    # Collect OpenAI config
+    openai_env: dict[str, str] = {}
+    openai_key = os.environ.get("OPENAI_API_KEY", "")
+    if openai_key:
+        openai_env["OPENAI_API_KEY"] = openai_key
+    if openai_env:
+        providers["openai"] = ProviderCredential(config={}, env=openai_env)
+
     # Collect Bedrock config
     # Note: AWS_BEARER_TOKEN_BEDROCK is excluded — it is a user-side
     # temporary token, not suitable for credential provisioning.

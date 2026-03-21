@@ -911,6 +911,17 @@ providers:
     max_input_tokens: 128000
 ```
 
+#### OpenAI（直接 API）
+
+```yaml
+providers:
+  openai:
+    model_id: gpt-5.2
+    max_input_tokens: 128000
+```
+
+環境変数 `OPENAI_API_KEY` が必要です。
+
 ---
 
 ## 15. ツール
@@ -1299,6 +1310,8 @@ LLM へのカスタム指示を追加するファイルです。
 | `/fork` | 現在のセッションをフォーク |
 | `/compact` | セッション履歴を圧縮 |
 | `/context` | モデル情報・コンテキストファイル・ウィンドウ使用状況を表示 |
+| `/copy` | 直前の LLM 応答をクリップボードにコピー |
+| `/copy N` | N 番目に新しい応答をコピー（`/copy 2` = 2つ前） |
 | `/diff` | セッション中のファイル変更を表示 |
 | `/rewind` | ファイル変更を巻き戻し |
 

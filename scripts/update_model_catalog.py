@@ -88,17 +88,19 @@ def _should_replace(existing: dict | None, new_entry: dict) -> bool:
 
 
 def _extract_models(data: dict) -> dict[str, dict[str, dict]]:
-    """Extract bedrock/azure/azure_openai/anthropic models from LiteLLM data.
+    """Extract models from LiteLLM data for all supported providers.
 
-    Returns {"bedrock": {...}, "azure": {...}, "azure_openai": {...}, "anthropic": {...}}.
+    Returns {"anthropic": {...}, "bedrock": {...}, "azure": {...}, "azure_openai": {...}, "openai": {...}}.
 
     - anthropic: Direct Anthropic API models (claude-* top-level keys)
     - azure: Azure AI Foundry models (Claude/Grok/Llama 4+ via azure_ai/ keys)
     - azure_openai: Azure OpenAI Service models (GPT via azure/ keys)
+    - openai: Direct OpenAI API models (gpt-5+ top-level keys)
     """
     bedrock: dict[str, dict] = {}
     azure: dict[str, dict] = {}
     azure_openai: dict[str, dict] = {}
+    openai_direct: dict[str, dict] = {}
     anthropic: dict[str, dict] = {}
 
     for key, info in data.items():
@@ -109,6 +111,11 @@ def _extract_models(data: dict) -> dict[str, dict[str, dict]]:
             continue
 
         entry = _build_entry(info)
+
+        # OpenAI direct API: top-level "gpt-*" keys (no "/" prefix), GPT-5+
+        if key.startswith("gpt-") and "/" not in key and _AZURE_GPT_RE.match(key):
+            if _should_replace(openai_direct.get(key), entry):
+                openai_direct[key] = entry
 
         # Anthropic direct API: top-level "claude-*" keys (no "/" prefix)
         if _ANTHROPIC_DIRECT_RE.match(key) and "/" not in key:
@@ -149,6 +156,7 @@ def _extract_models(data: dict) -> dict[str, dict[str, dict]]:
         "bedrock": bedrock,
         "azure": azure,
         "azure_openai": azure_openai,
+        "openai": openai_direct,
     }
 
 
@@ -162,7 +170,7 @@ def _build_catalog(
     Preserves the key order of the existing catalog so that
     manually-maintained sections (e.g. ollama) stay in place.
     """
-    _LITELLM_PROVIDERS = {"anthropic", "bedrock", "azure", "azure_openai"}
+    _LITELLM_PROVIDERS = {"anthropic", "bedrock", "azure", "azure_openai", "openai"}
 
     updated_providers: dict[str, dict] = {}
     for provider in _LITELLM_PROVIDERS:
@@ -259,6 +267,7 @@ def main() -> None:
     print(f"  Bedrock models found:      {len(extracted['bedrock'])}")
     print(f"  Azure AI Foundry found:    {len(extracted['azure'])}")
     print(f"  Azure OpenAI found:        {len(extracted['azure_openai'])}")
+    print(f"  OpenAI direct found:       {len(extracted['openai'])}")
 
     catalog = _build_catalog(extracted, existing, args.update_only)
 

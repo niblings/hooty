@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import shutil
 import subprocess
 import sys
@@ -156,6 +157,80 @@ def _capture_windows(dest_dir: Path, *, ps_cmd: str) -> ClipboardResult:
             return ClipboardResult(kind="files", file_paths=paths)
 
     return ClipboardResult(kind="empty")
+
+
+def write_clipboard(text: str) -> tuple[bool, str]:
+    """Write text to system clipboard. Returns (success, error_message)."""
+    platform = detect_platform()
+
+    if platform in (Platform.WINDOWS, Platform.WSL2):
+        return _write_clipboard_powershell(text, platform)
+
+    if platform == Platform.MACOS:
+        cmd = ["pbcopy"]
+    elif platform == Platform.LINUX:
+        if shutil.which("xclip"):
+            cmd = ["xclip", "-selection", "clipboard"]
+        elif shutil.which("xsel"):
+            cmd = ["xsel", "--clipboard", "--input"]
+        else:
+            return False, "No clipboard tool found (install xclip or xsel)"
+    else:
+        return False, "Unsupported platform for clipboard write"
+
+    try:
+        result = subprocess.run(
+            cmd,
+            input=text,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if result.returncode != 0:
+            err = result.stderr.strip() or f"Command failed with exit code {result.returncode}"
+            return False, err
+        return True, ""
+    except FileNotFoundError:
+        return False, f"Command not found: {cmd[0]}"
+    except subprocess.TimeoutExpired:
+        return False, "Clipboard write timed out"
+    except Exception as e:
+        return False, str(e)
+
+
+def _write_clipboard_powershell(text: str, platform: Platform) -> tuple[bool, str]:
+    """Write text to clipboard via PowerShell.
+
+    Pipes base64-encoded text through stdin (pure ASCII) to avoid
+    encoding issues with multi-byte characters on Windows.
+    """
+    ps_cmd = "powershell" if platform == Platform.WINDOWS else "powershell.exe"
+    b64 = base64.b64encode(text.encode("utf-8")).decode("ascii")
+    # Pipe base64 (ASCII-safe) via stdin; decode to UTF-8 in PowerShell.
+    script = (
+        "$b64 = @($input) -join '';"
+        "$bytes = [System.Convert]::FromBase64String($b64);"
+        "$text = [System.Text.Encoding]::UTF8.GetString($bytes);"
+        "Set-Clipboard -Value $text"
+    )
+    try:
+        result = subprocess.run(
+            [ps_cmd, "-NoProfile", "-Command", script],
+            input=b64,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if result.returncode != 0:
+            err = result.stderr.strip() or f"Command failed with exit code {result.returncode}"
+            return False, err
+        return True, ""
+    except FileNotFoundError:
+        return False, f"Command not found: {ps_cmd}"
+    except subprocess.TimeoutExpired:
+        return False, "Clipboard write timed out"
+    except Exception as e:
+        return False, str(e)
 
 
 def _capture_macos(dest_dir: Path) -> ClipboardResult:

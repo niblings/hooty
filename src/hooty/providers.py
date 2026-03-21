@@ -45,6 +45,8 @@ def create_model(config: AppConfig) -> Model:
         return _create_azure_model(config)
     elif config.provider == Provider.AZURE_OPENAI:
         return _create_azure_openai_model(config)
+    elif config.provider == Provider.OPENAI:
+        return _create_openai_model(config)
     elif config.provider == Provider.OLLAMA:
         return _create_ollama_model(config)
     else:
@@ -239,6 +241,24 @@ def _create_azure_openai_model(config: AppConfig) -> Model:
         azure_endpoint=config.azure_openai.endpoint,
         azure_deployment=config.azure_openai.deployment,
         api_version=config.azure_openai.api_version,
+        client_params={"timeout": timeout},
+    )
+
+
+def _create_openai_model(config: AppConfig) -> Model:
+    """Create OpenAI direct API model instance."""
+    try:
+        from agno.models.openai import OpenAIChat
+    except ImportError:
+        raise ImportError(
+            "OpenAI requires additional packages.\n"
+            "  pip install hooty[openai]"
+        )
+
+    timeout = _build_httpx_timeout(config, streaming=config.stream)
+    return OpenAIChat(
+        id=config.openai.model_id,
+        api_key=get_secret("OPENAI_API_KEY"),
         client_params={"timeout": timeout},
     )
 

@@ -22,6 +22,7 @@ class Provider(str, Enum):
     AZURE = "azure"
     AZURE_OPENAI = "azure_openai"
     BEDROCK = "bedrock"
+    OPENAI = "openai"
     OLLAMA = "ollama"
 
 
@@ -79,6 +80,14 @@ class AzureOpenAIConfig:
     endpoint: str = ""
     deployment: str = ""
     api_version: str = "2024-10-21"
+    max_input_tokens: Optional[int] = None
+
+
+@dataclass
+class OpenAIConfig:
+    """OpenAI direct API provider configuration."""
+
+    model_id: str = "gpt-5.2"
     max_input_tokens: Optional[int] = None
 
 
@@ -168,6 +177,7 @@ class AppConfig:
     bedrock: BedrockConfig = field(default_factory=BedrockConfig)
     azure: AzureConfig = field(default_factory=AzureConfig)
     azure_openai: AzureOpenAIConfig = field(default_factory=AzureOpenAIConfig)
+    openai: OpenAIConfig = field(default_factory=OpenAIConfig)
     ollama: OllamaConfig = field(default_factory=OllamaConfig)
     mcp: dict[str, dict[str, Any]] = field(default_factory=dict)
     mcp_sources: dict[str, str] = field(default_factory=dict)  # "global" or "project"
@@ -364,6 +374,10 @@ class AppConfig:
                 self.azure_openai.api_version = profile.api_version
             if profile.max_input_tokens is not None:
                 self.azure_openai.max_input_tokens = profile.max_input_tokens
+        elif profile.provider == Provider.OPENAI:
+            self.openai.model_id = profile.model_id
+            if profile.max_input_tokens is not None:
+                self.openai.max_input_tokens = profile.max_input_tokens
         elif profile.provider == Provider.OLLAMA:
             self.ollama.model_id = profile.model_id
             if profile.host is not None:
@@ -499,6 +513,12 @@ def _apply_yaml(config: AppConfig, data: dict[str, Any]) -> None:
         config.azure_openai.api_version = azure_openai["api_version"]
     if "max_input_tokens" in azure_openai:
         config.azure_openai.max_input_tokens = azure_openai["max_input_tokens"]
+
+    openai_cfg = providers.get("openai", {})
+    if "model_id" in openai_cfg:
+        config.openai.model_id = openai_cfg["model_id"]
+    if "max_input_tokens" in openai_cfg:
+        config.openai.max_input_tokens = openai_cfg["max_input_tokens"]
 
     ollama = providers.get("ollama", {})
     if "model_id" in ollama:
@@ -730,6 +750,8 @@ def supports_thinking(config: AppConfig) -> bool:
         model_id = config.bedrock.model_id
     elif provider == "azure":
         model_id = config.azure.model_id
+    elif provider == "openai":
+        model_id = config.openai.model_id
     elif provider == "ollama":
         model_id = config.ollama.model_id
     else:
@@ -748,8 +770,8 @@ def supports_thinking(config: AppConfig) -> bool:
         }
         return config.anthropic.model_id not in non_thinking
 
-    if config.provider == Provider.AZURE_OPENAI:
-        return _supports_reasoning_effort(config.azure_openai.model_id)
+    if config.provider in (Provider.AZURE_OPENAI, Provider.OPENAI):
+        return _supports_reasoning_effort(model_id)
 
     return False
 
@@ -767,6 +789,8 @@ def supports_vision(config: AppConfig) -> bool:
         model_id = config.bedrock.model_id
     elif provider == "azure":
         model_id = config.azure.model_id
+    elif provider == "openai":
+        model_id = config.openai.model_id
     elif provider == "ollama":
         model_id = config.ollama.model_id
     else:
@@ -1091,6 +1115,14 @@ def validate_config(config: AppConfig) -> Optional[str]:
                 "Azure AI endpoint is not configured.\n"
                 "  Set providers.azure.endpoint in config.yaml or\n"
                 "  the AZURE_ENDPOINT environment variable."
+            )
+
+    if config.provider == Provider.OPENAI:
+        api_key = get_secret("OPENAI_API_KEY")
+        if not api_key:
+            return (
+                "OpenAI API key is missing.\n"
+                "  Set the OPENAI_API_KEY environment variable."
             )
 
     if config.provider == Provider.OLLAMA:

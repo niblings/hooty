@@ -4,7 +4,7 @@
 
 ```
    ,___,
-   (o,o)    Hooty v0.6.8
+   (o,o)    Hooty
    /)  )    Interactive AI coding assistant
   --""--    powered by Agno
 ```
@@ -13,7 +13,7 @@
 
 - **REPL 対話型インターフェース** — Rich ベースのターミナル UI、マークダウンストリーミング表示、Planning / Coding の 2 モード切替
 - **Non-Interactive モード** — `hooty -p "プロンプト"` で単発実行。パイプ入力にも対応し、スクリプトや CI/CD から利用可能
-- **マルチプロバイダ対応** — Anthropic / Azure AI Foundry / Azure OpenAI / AWS Bedrock / Ollama の 5 プロバイダをサポート。`/model` でセッション中のモデル切替が可能
+- **マルチプロバイダ対応** — Anthropic / Azure AI Foundry / Azure OpenAI / OpenAI / AWS Bedrock / Ollama の 6 プロバイダをサポート。`/model` でセッション中のモデル切替が可能
 - **コーディングツール** — ファイル読み書き・編集、シェル実行、コード探索（grep / find / ls）を内蔵。Safe モード（デフォルト ON）で危険な操作に確認ダイアログを表示
 - **コンテキストファイル** — グローバル指示（`~/.hooty/hooty.md`）とプロジェクト固有指示（`AGENTS.md` / `CLAUDE.md` 等）で LLM へのカスタム指示を追加。他ツールの指示書とも互換
 - **セッション管理** — 会話履歴の永続化・復元・フォーク、コンテキストウィンドウの自動圧縮

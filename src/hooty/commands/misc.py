@@ -31,6 +31,7 @@ def cmd_help(ctx: CommandContext, args: list[str] | None = None) -> None:
         ("/code", "Switch to coding mode"),
         ("/compact", "Compact session history"),
         ("/context", "Show context files & window usage"),
+        ("/copy", "Copy last response to clipboard"),
         ("/database", "Show current DB connection"),
         ("/diff", "Show file changes made in this session"),
         ("/database add <name> <url>", "Add database (e.g. /database add mydb postgresql://user:pass@host:5432/db)"),
@@ -125,6 +126,44 @@ def cmd_unsafe(ctx: CommandContext, args: list[str] | None = None) -> None:
     """Disable safe mode."""
     ctx.confirm_ref[0] = False
     ctx.console.print("  [success]\u2713 Safe mode disabled[/success]")
+
+
+def cmd_copy(ctx: CommandContext, args: list[str] | None = None) -> None:
+    """Copy last LLM response to clipboard."""
+    n = 1
+    if args:
+        try:
+            n = int(args[0])
+        except ValueError:
+            ctx.console.print("  [warning]Usage: /copy [N][/warning]")
+            return
+    if n < 1:
+        ctx.console.print("  [warning]N must be >= 1[/warning]")
+        return
+
+    if n == 1:
+        text = ctx.get_last_response_text()
+    else:
+        from hooty.conversation_log import load_recent_history
+
+        entries = load_recent_history(ctx.config.project_dir, ctx.get_session_id(), n)
+        if len(entries) < n:
+            text = ""
+        else:
+            text = entries[-n].get("output", "")
+
+    if not text:
+        ctx.console.print("  [warning]No response to copy.[/warning]")
+        return
+
+    from hooty.clipboard import write_clipboard
+
+    ok, err = write_clipboard(text)
+    if ok:
+        label = "" if n == 1 else f" (#{n})"
+        ctx.console.print(f"  [success]✓ Copied{label} to clipboard[/success] [dim]({len(text)} chars)[/dim]")
+    else:
+        ctx.console.print(f"  [error]✗ {err}[/error]")
 
 
 def cmd_rescan(ctx: CommandContext, args: list[str] | None = None) -> None:
