@@ -233,6 +233,8 @@ class AppConfig:
     api_connect_timeout: int = 30
     api_streaming_read_timeout: int = 180
     api_read_timeout: int = 360
+    api_write_timeout: int = 30
+    api_pool_timeout: int = 30
 
     snapshot_enabled: bool = False
 
@@ -562,6 +564,10 @@ def _apply_yaml(config: AppConfig, data: dict[str, Any]) -> None:
             config.api_streaming_read_timeout = int(api_timeout["streaming_read"])
         if "read" in api_timeout:
             config.api_read_timeout = int(api_timeout["read"])
+        if "write" in api_timeout:
+            config.api_write_timeout = int(api_timeout["write"])
+        if "pool" in api_timeout:
+            config.api_pool_timeout = int(api_timeout["pool"])
 
     # Mode-specific roles
     roles = data.get("roles", {})

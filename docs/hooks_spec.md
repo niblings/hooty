@@ -63,7 +63,7 @@ hooks:
 | `UserPromptSubmit` | Message | `_send_to_agent()` 冒頭 | **Yes** |
 | `Stop` | Message | レスポンス完了後 | No |
 | `ResponseError` | Message | `_send_to_agent()` 例外ハンドラ | No |
-| `PreToolUse` | Tool | ストリーム内 tool_call_started | **Yes** (v1: warning のみ) |
+| `PreToolUse` | Tool | Agno tool_hooks ミドルウェア（ツール実行前） | **Yes** |
 | `PostToolUse` | Tool | ストリーム内 tool_call_completed | No |
 | `PostToolUseFailure` | Tool | ツール実行失敗時 | No |
 | `PermissionRequest` | Tool | `_confirm_action()` 冒頭 | **Yes** |
@@ -275,24 +275,35 @@ class HookResult:
 
 | ファイル | 内容 |
 |---|---|
-| `src/hooty/hooks.py` | データモデル + 設定ロード + 実行エンジン + 状態管理 |
+| `src/hooty/hooks.py` | データモデル + 設定ロード + 実行エンジン + 状態管理 + Agno tool_hooks ミドルウェア |
+| `src/hooty/agent_factory.py` | `Agent(tool_hooks=[...])` で PreToolUse ミドルウェアを接続 |
 | `src/hooty/hooks_picker.py` | `/hooks` ピッカー UI |
-| `tests/test_hooks.py` | ユニットテスト（39+ tests） |
+| `tests/test_hooks.py` | ユニットテスト（45+ tests） |
 
 ## 実装上の注意
+
+### PreToolUse ブロッキング（Agno tool_hooks）
+
+`PreToolUse` のブロッキングは Agno の `tool_hooks` ミドルウェアで実現している。`agent_factory.py` で `Agent(tool_hooks=[_agno_pre_tool_hook])` を設定し、全ツールの実行前にフックが発火する。
+
+- `hooks.py` の `_agno_pre_tool_hook()` が Agno のツール実行チェーンに割り込む
+- `_hooks_ref` 経由で hooks_config を参照（REPL / oneshot 共通）
+- ブロック時（exit 2）: ツールを実行せず `[BLOCKED]` メッセージを LLM に返却
+- `additional_context` がある場合: ツール実行後の結果文字列に付加
+- `tool_input`（ツール引数）を stdin JSON に含めるため、コマンド内容の検査が可能
 
 ### 非同期/同期の境界
 
 - `emit_hook()` は async 関数。REPL のストリーミングループ内など async コンテキストから呼び出す
 - `emit_hook_sync()` は sync ラッパー。`_fire_session_end()` 等の同期コンテキストから呼び出す
 - `_fire_session_end()` は `asyncio.run()` で新しいイベントループを作成して実行する（既存ループの状態に依存しない）
+- `_agno_pre_tool_hook()` は async 関数。Agno の `aexecute()` 内から呼び出されるため、直接 `await emit_hook()` を使用
 
 ### confirm.py との連携
 
-`confirm.py` の `_hooks_ref` リスト（`[hooks_config, session_id, cwd, loop]`）を通じてフック設定を参照。`repl.py` の `_update_hooks_ref()` で値を更新。フック関連のスラッシュコマンド（`/hooks`, `/hooks list` 等）は `commands/hooks_cmd.py` に実装。
+`confirm.py` の `_hooks_ref` リスト（`[hooks_config, session_id, cwd, loop]`）を通じてフック設定を参照。`repl.py` の `_update_hooks_ref()` および `oneshot.py` で値を更新。フック関連のスラッシュコマンド（`/hooks`, `/hooks list` 等）は `commands/hooks_cmd.py` に実装。
 
 ## v1 制約
 
-- `PreToolUse` の blocking は Agno ストリーム内で実行中断不可のため WARNING ログのみ
 - `PostToolUseFailure` は Agno ストリームでの成功/失敗区別が限定的
 - `Notification` イベントは将来拡張用（v1 では未使用）

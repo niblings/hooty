@@ -13,6 +13,7 @@ from hooty.hooks import (
     HookEntry,
     HookEvent,
     HookResult,
+    _agno_pre_tool_hook,
     _execute_command_hook,
     _matches,
     apply_disabled_state,
@@ -419,3 +420,136 @@ class TestHelpers:
         assert has_allow_decision(results) is True
         results = [HookResult(success=True, decision="")]
         assert has_allow_decision(results) is False
+
+
+# ---------------------------------------------------------------------------
+# _agno_pre_tool_hook
+# ---------------------------------------------------------------------------
+
+
+class TestAgnoPreToolHook:
+    """Tests for the Agno tool_hooks middleware."""
+
+    def _setup_hooks_ref(self, hooks_config, session_id="sid", cwd="/tmp"):
+        """Set _hooks_ref for testing."""
+        from hooty.tools.confirm import _hooks_ref
+        _hooks_ref[0] = hooks_config
+        _hooks_ref[1] = session_id
+        _hooks_ref[2] = cwd
+        _hooks_ref[3] = None
+
+    def _teardown_hooks_ref(self):
+        from hooty.tools.confirm import _hooks_ref
+        _hooks_ref[0] = None
+        _hooks_ref[1] = None
+        _hooks_ref[2] = None
+        _hooks_ref[3] = None
+
+    def test_passthrough_when_no_hooks(self):
+        """When hooks_config is None, function is called directly."""
+        self._setup_hooks_ref(None)
+        called = []
+
+        async def fake_tool(**kwargs):
+            called.append(kwargs)
+            return "ok"
+
+        result = _run(_agno_pre_tool_hook("write_file", fake_tool, {"path": "/x"}))
+        assert result == "ok"
+        assert called == [{"path": "/x"}]
+        self._teardown_hooks_ref()
+
+    def test_passthrough_when_no_pre_tool_entries(self):
+        """When no PreToolUse entries exist, function is called directly."""
+        self._setup_hooks_ref({"SessionStart": [HookEntry(command="echo hi")]})
+        called = []
+
+        async def fake_tool(**kwargs):
+            called.append(True)
+            return "done"
+
+        result = _run(_agno_pre_tool_hook("write_file", fake_tool, {}))
+        assert result == "done"
+        assert called == [True]
+        self._teardown_hooks_ref()
+
+    def test_blocking_hook_prevents_execution(self):
+        """A blocking hook with exit 2 prevents the tool from running."""
+        config = {
+            "PreToolUse": [
+                HookEntry(command="bash -c 'echo blocked >&2; exit 2'",
+                          matcher="write_file", blocking=True),
+            ],
+        }
+        self._setup_hooks_ref(config)
+        called = []
+
+        async def fake_tool(**kwargs):
+            called.append(True)
+            return "should not reach"
+
+        result = _run(_agno_pre_tool_hook("write_file", fake_tool, {"path": "/x"}))
+        assert "[BLOCKED]" in result
+        assert "blocked" in result
+        assert called == []
+        self._teardown_hooks_ref()
+
+    def test_non_matching_hook_allows_execution(self):
+        """A hook that doesn't match the tool_name is skipped."""
+        config = {
+            "PreToolUse": [
+                HookEntry(command="bash -c 'exit 2'",
+                          matcher="write_file", blocking=True),
+            ],
+        }
+        self._setup_hooks_ref(config)
+        called = []
+
+        async def fake_tool(**kwargs):
+            called.append(True)
+            return "ok"
+
+        result = _run(_agno_pre_tool_hook("read_file", fake_tool, {}))
+        assert result == "ok"
+        assert called == [True]
+        self._teardown_hooks_ref()
+
+    def test_additional_context_injected(self):
+        """Hook additional_context is prepended to the tool result."""
+        config = {
+            "PreToolUse": [
+                HookEntry(command="echo extra_info"),
+            ],
+        }
+        self._setup_hooks_ref(config)
+
+        async def fake_tool(**kwargs):
+            return "tool output"
+
+        result = _run(_agno_pre_tool_hook("write_file", fake_tool, {}))
+        assert "extra_info" in result
+        assert "tool output" in result
+        self._teardown_hooks_ref()
+
+    def test_tool_input_passed_to_hook(self):
+        """tool_input (args) is passed to the hook script via stdin JSON."""
+        config = {
+            "PreToolUse": [
+                HookEntry(
+                    command="python3 -c \"import sys,json; d=json.load(sys.stdin); "
+                            "print(d.get('tool_input',{}).get('command',''))\"",
+                ),
+            ],
+        }
+        self._setup_hooks_ref(config)
+
+        async def fake_tool(**kwargs):
+            return "ok"
+
+        result = _run(_agno_pre_tool_hook(
+            "run_shell", fake_tool, {"command": "rm -rf /"},
+        ))
+        assert "ok" in result
+        # The hook's stdout becomes additional_context containing the command
+        assert "rm -rf /" in result
+        self._teardown_hooks_ref()

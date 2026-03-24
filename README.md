@@ -28,7 +28,7 @@ Interactive AI coding assistant CLI built on the [Agno](https://github.com/agno-
 - **File Snapshots** - Automatic tracking of LLM file changes during sessions; `/diff` for diffs, `/rewind` to roll back
 - **Extended Thinking** - Control Claude's extended thinking with `/reasoning`; `auto` mode dynamically adjusts thinking budget in 3 levels based on keywords (`think`, `ultrathink`, etc.)
 - **Code Review** - Interactive code review and auto-fix with `/review`
-- **File Attachments** - Attach images and text files with `/attach`; supports clipboard paste (`/attach paste`) and screen capture (`/attach capture`, Windows / WSL2); also `--attach` CLI option for pre-attaching at startup
+- **File Attachments** - Attach images and text files with `/attach`; supports clipboard paste (`/attach paste`) and screen capture (`/attach capture`, Windows / WSL2 / macOS); also `--attach` CLI option for pre-attaching at startup
 
 ## Installation
 

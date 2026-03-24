@@ -192,11 +192,14 @@ def create_agent(
     # Session state — store working directory for project association
     session_state = {"working_directory": config.working_directory}
 
+    from hooty.hooks import _agno_pre_tool_hook
+
     return Agent(
         name="hooty",
         model=model,
         role=role,
         telemetry=config.agno.telemetry,
+        tool_hooks=[_agno_pre_tool_hook],
         db=storage,
         tools=tools,
         skills=agno_skills,

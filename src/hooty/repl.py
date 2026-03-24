@@ -1608,7 +1608,6 @@ class REPL:
                             indicator.set_tool(tool_name)
                         _tool_running = True
                         _win_suppressed = 0
-                        await self._fire_pre_tool_use(tool_name)
                         if pending_text:
                             bullet, color = self._tool_bullet(tool_name)
                             tbl = self._build_bullet_table(bullet, color, pending_text)
@@ -2601,20 +2600,6 @@ class REPL:
             )
         except Exception:
             pass
-
-    async def _fire_pre_tool_use(self, tool_name: str) -> None:
-        """Emit PreToolUse hook (async, inside streaming loop)."""
-        if not self.config.hooks_enabled or not self._hooks_config:
-            return
-        from hooty.hooks import HookEvent, emit_hook, has_blocking
-
-        results = await emit_hook(
-            HookEvent.PRE_TOOL_USE, self._hooks_config,
-            self.session_id, self.config.working_directory,
-            tool_name=tool_name,
-        )
-        if has_blocking(results):
-            logger.warning("PreToolUse hook blocked %s (v1: cannot interrupt stream)", tool_name)
 
     async def _fire_post_tool_use(self, tool_name: str) -> None:
         """Emit PostToolUse hook (async, inside streaming loop)."""

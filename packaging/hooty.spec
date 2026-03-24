@@ -125,7 +125,11 @@ a = Analysis(
         # --- Image processing (for /attach capture) ---
         "PIL",
         "PIL.Image",
-    ],
+    ] + ([
+        # --- macOS screen capture (pyobjc, darwin only) ---
+        "Quartz",
+        "objc",
+    ] if sys.platform == "darwin" else []),
     hookspath=[str(PROJECT_ROOT / "packaging" / "hooks")],
     hooksconfig={},
     runtime_hooks=[],

@@ -26,7 +26,7 @@
 - **ファイルスナップショット** — セッション中の LLM によるファイル変更を自動追跡。`/diff` で差分表示、`/rewind` で巻き戻し
 - **Extended Thinking（拡張思考）** — `/reasoning` で Claude の拡張思考を制御。`auto` モードではメッセージ内のキーワード（`think`, `ultrathink`, `熟考` 等）に応じて thinking budget を 3 段階で動的に調整
 - **コードレビュー** — `/review` でインタラクティブなコードレビューと自動修正
-- **ファイル添付** — `/attach` で画像・テキストファイルをプロンプトに添付。クリップボードペースト（`/attach paste`）、スクリーンキャプチャ（`/attach capture`、Windows / WSL2）にも対応。`--attach` CLI オプションで起動時の事前添付も可能
+- **ファイル添付** — `/attach` で画像・テキストファイルをプロンプトに添付。クリップボードペースト（`/attach paste`）、スクリーンキャプチャ（`/attach capture`、Windows / WSL2 / macOS）にも対応。`--attach` CLI オプションで起動時の事前添付も可能
 
 ## インストール
 

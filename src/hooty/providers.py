@@ -19,8 +19,8 @@ def _build_httpx_timeout(config: AppConfig, *, streaming: bool) -> httpx.Timeout
     return httpx.Timeout(
         connect=float(config.api_connect_timeout),
         read=float(read),
-        write=float(config.api_read_timeout),
-        pool=float(config.api_read_timeout),
+        write=float(config.api_write_timeout),
+        pool=float(config.api_pool_timeout),
     )
 
 

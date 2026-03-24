@@ -78,6 +78,12 @@ def oneshot_run(config: AppConfig, prompt: str, *, attach_files: list[str] | Non
     # Load hooks config
     hooks_config = _load_hooks(config)
 
+    # Share hook refs with tool_hooks middleware (same pattern as REPL)
+    from hooty.tools.confirm import _hooks_ref
+    _hooks_ref[0] = hooks_config
+    _hooks_ref[1] = session_id
+    _hooks_ref[2] = cwd
+
     # Hook: SessionStart
     _fire_hook_sync(hooks_config, "SessionStart", session_id, cwd,
                     provider=config.provider.value,
@@ -147,37 +153,38 @@ def _process_attach_files(
     stack = AttachmentStack()
 
     # Use tempfile for non-interactive mode — avoids creating orphan session dirs
+    import shutil
     import tempfile
     attachments_dir = Path(tempfile.mkdtemp(prefix="hooty-att-"))
 
-    ctx_limit = get_context_limit(config)
+    try:
+        ctx_limit = get_context_limit(config)
 
-    for file_path in attach_files:
-        p = Path(file_path)
-        if not p.is_absolute():
-            p = Path(config.working_directory) / p
+        for file_path in attach_files:
+            p = Path(file_path)
+            if not p.is_absolute():
+                p = Path(config.working_directory) / p
 
-        result = stack.add(
-            p,
-            config=config,
-            attachments_dir=attachments_dir,
-            context_limit=ctx_limit,
-        )
-        if isinstance(result, str):
-            print(f"attach: {result}", file=sys.stderr)
+            result = stack.add(
+                p,
+                config=config,
+                attachments_dir=attachments_dir,
+                context_limit=ctx_limit,
+            )
+            if isinstance(result, str):
+                print(f"attach: {result}", file=sys.stderr)
 
-    if stack.count == 0:
-        return None, prompt
+        if stack.count == 0:
+            return None, prompt
 
-    images, text_block = stack.flush()
-    if text_block:
-        prompt = prompt + "\n\n" + text_block
+        images, text_block = stack.flush()
+        if text_block:
+            prompt = prompt + "\n\n" + text_block
 
-    # Clean up temp dir after flush (image bytes are already in memory)
-    import shutil
-    shutil.rmtree(attachments_dir, ignore_errors=True)
-
-    return images, prompt
+        return images, prompt
+    finally:
+        # Clean up temp dir (image bytes are already in memory after flush)
+        shutil.rmtree(attachments_dir, ignore_errors=True)
 
 
 def _fire_hook_sync(hooks_config: dict, event_name: str,

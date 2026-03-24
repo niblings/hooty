@@ -314,8 +314,7 @@ _CAPTURE_HELP = """\
     (none), active    Active (foreground) window
     0, primary        Primary monitor
     1, 2              Monitor by index
-    chrome.exe        Process name
-    Notepad           Window class name (falls back to title match)
+    chrome.exe        Process / app name (.exe/.app suffix auto-stripped)
     "Design Doc"      Window title (partial match)
 
   [bold]Options:[/bold]
@@ -325,8 +324,10 @@ _CAPTURE_HELP = """\
 
   [bold]Examples:[/bold]
     /attach capture
-    /attach capture chrome.exe --delay 3
-    /attach capture "Design Doc" --delay 2 --repeat 3 --interval 5"""
+    /attach capture chrome --delay 3
+    /attach capture "Design Doc" --delay 2 --repeat 3 --interval 5
+
+  [dim]macOS: Requires Screen Recording permission for the terminal app.[/dim]"""
 
 
 def _attach_capture_impl(ctx: CommandContext, stack, args: list[str]) -> None:
@@ -343,7 +344,7 @@ def _attach_capture_impl(ctx: CommandContext, stack, args: list[str]) -> None:
     if not is_capture_available():
         ctx.console.print(
             "  \u26a0\ufe0f Screen capture is not supported in this environment "
-            "(Windows / WSL2 only)"
+            "(Windows / WSL2 / macOS only)"
         )
         return
 

@@ -2,6 +2,33 @@
 
 [Keep a Changelog](https://keepachangelog.com/) 形式に準拠。
 
+## [0.6.10] — 2026-03-24
+
+### Added
+
+- **`/attach capture` macOS 対応** — macOS ネイティブの `screencapture` コマンドと `pyobjc-framework-Quartz`（`CGWindowListCopyWindowInfo`）によるウィンドウ列挙で、Windows / WSL2 と同等のスクリーンキャプチャ機能を macOS でも利用可能に。ターゲット指定（active / モニタ番号 / アプリ名 / ウィンドウタイトル）、`--delay`、`--repeat`、`--interval` オプションすべて対応
+  - `capture.py`: `_MacWindow` dataclass、`_list_macos_windows()`（`CGWindowListCopyWindowInfo` で z-order 順にウィンドウ列挙）、`_resolve_macos_target()`（ターゲット文字列 → `screencapture` 引数への解決）、`_capture_macos()`（macOS キャプチャバックエンド）を追加。`capture_screen()` をプラットフォームディスパッチに変更し既存 Windows ロジックを `_capture_windows()` に抽出
+  - `commands/attach.py`: ヘルプテキストに macOS 権限注記を追加、対応プラットフォーム表記を更新
+  - `pyproject.toml`: `macos-capture` optional dependency（`pyobjc-framework-Quartz`）追加
+  - `packaging/hooty.spec`: macOS ビルド時に `Quartz`・`objc` を hidden import に追加
+
+### Fixed
+
+- **`main.py` の例外型チェックを `isinstance()` に変更** — `type(e).__name__ == "CredentialExpiredError"` / `"ConfigFileError"` の文字列比較を `isinstance()` による直接型チェックに修正。リファクタリング耐性の向上と同名別クラスの誤認防止
+- **`oneshot.py` のテンポラリディレクトリ削除漏れ修正** — `_process_attach_files()` で `tempfile.mkdtemp()` が例外発生時にクリーンアップされない問題を `try-finally` でラップして修正
+
+- **`api_timeout` の `write`/`pool` タイムアウト独立化** — `httpx.Timeout` の `write` と `pool` が `api_read_timeout`（360s）を流用していた対応漏れを修正。それぞれ独立した設定値 `api_write_timeout`/`api_pool_timeout`（デフォルト 30s）を導入し、`config.yaml` の `api_timeout.write`/`api_timeout.pool` で個別に設定可能にした
+  - `config.py`: `AppConfig` に `api_write_timeout`, `api_pool_timeout` フィールド追加、YAML パース対応
+  - `providers.py`: `_build_httpx_timeout()` で新しい設定値を参照
+
+- **PreToolUse フックのブロッキング実装** — `PreToolUse` フックの `blocking: true` + exit code 2 が実際にツール実行を阻止できるようになった。従来はストリーミングイベント（`tool_call_started`）で発火していたため、Agno が既にツール実行を開始しており WARNING ログのみだった。Agno の `tool_hooks` ミドルウェアを使い、ツール実行 **前** にフックを発火するよう変更
+  - `hooks.py`: `_agno_pre_tool_hook()` — Agno tool_hooks ミドルウェア追加。ブロック時は `[BLOCKED]` メッセージを LLM に返却、`additional_context` はツール結果に付加
+  - `agent_factory.py`: `Agent(tool_hooks=[_agno_pre_tool_hook])` で全ツールに接続
+  - `repl.py`: 旧 `_fire_pre_tool_use()` メソッドと呼び出しを削除（二重発火防止）
+  - `oneshot.py`: `_hooks_ref` セットアップ追加（非対話モードでもブロック動作）
+  - `hooks_spec.md`: v1 制約から PreToolUse の記述を削除、実装詳細を追記
+  - `tool_input`（ツール引数）を stdin JSON に含めるようになり、`run_shell` のコマンド内容検査等が可能に
+
 ## [0.6.9] — 2026-03-21
 
 ### Added

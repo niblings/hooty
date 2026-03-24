@@ -456,3 +456,50 @@ def get_additional_context(results: list[HookResult]) -> str:
 def has_allow_decision(results: list[HookResult]) -> bool:
     """Return True if any result has decision='allow'."""
     return any(r.decision == "allow" for r in results)
+
+
+# ---------------------------------------------------------------------------
+# Agno tool_hooks middleware
+# ---------------------------------------------------------------------------
+
+
+async def _agno_pre_tool_hook(name: str, function: Any, args: dict) -> Any:
+    """Agno tool_hooks middleware for PreToolUse blocking.
+
+    Registered via Agent(tool_hooks=[...]). Fires PreToolUse shell hooks
+    BEFORE the tool executes. If a blocking hook returns exit code 2 the
+    tool is skipped and an error message is returned to the LLM.
+    """
+    from hooty.tools.confirm import _hooks_ref
+
+    hooks_config, session_id, cwd, _loop = _hooks_ref
+
+    # Fast path: hooks not configured
+    if not hooks_config or not session_id:
+        return await function(**args)
+
+    entries = hooks_config.get(HookEvent.PRE_TOOL_USE.value, [])
+    if not entries:
+        return await function(**args)
+
+    results = await emit_hook(
+        HookEvent.PRE_TOOL_USE, hooks_config,
+        session_id, cwd or "",
+        tool_name=name,
+        tool_input=args,
+    )
+
+    if has_blocking(results):
+        reason = get_block_reason(results)
+        logger.info("PreToolUse hook blocked tool '%s': %s", name, reason)
+        return f"[BLOCKED] Tool '{name}' was blocked by a PreToolUse hook: {reason}"
+
+    # Execute the tool
+    result = await function(**args)
+
+    # Inject additional context from hooks into tool result
+    ctx = get_additional_context(results)
+    if ctx and isinstance(result, str):
+        result = f"[Hook context]\n{ctx}\n\n{result}"
+
+    return result

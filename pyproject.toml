@@ -42,7 +42,8 @@ mcp = ["mcp"]
 search = ["ddgs>=9.11.3"]
 ollama = ["ollama"]
 enterprise = ["cryptography>=43.0"]
-all = ["hooty[anthropic,azure,azure-openai,openai,aws,ollama,github,mcp,search,enterprise]"]
+macos-capture = ["pyobjc-framework-Quartz; sys_platform == 'darwin'"]
+all = ["hooty[anthropic,azure,azure-openai,openai,aws,ollama,github,mcp,search,enterprise,macos-capture]"]
 dev = [
     "pytest>=9.0",
     "pytest-cov",

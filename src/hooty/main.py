@@ -12,7 +12,8 @@ import typer
 from rich.console import Console
 
 from hooty import __version__
-from hooty.config import load_config, owl_eyes, validate_config
+from hooty.config import ConfigFileError, load_config, owl_eyes, validate_config
+from hooty.credentials import CredentialExpiredError
 
 _console = Console()
 
@@ -211,11 +212,11 @@ def main(
             no_hooks=no_hooks,
         )
     except Exception as e:
-        if type(e).__name__ == "CredentialExpiredError":
+        if isinstance(e, CredentialExpiredError):
             _console.print(f"\n  [bold red]✗ {e}[/bold red]")
             _console.print("  [dim]Run 'hooty setup' to apply new credentials, or 'hooty setup clear' to remove.[/dim]\n")
             sys.exit(1)
-        if type(e).__name__ == "ConfigFileError":
+        if isinstance(e, ConfigFileError):
             _console.print(f"\n  [bold red]✗ {e}[/bold red]\n")
             sys.exit(1)
         raise
