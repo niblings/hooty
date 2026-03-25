@@ -2,6 +2,25 @@
 
 [Keep a Changelog](https://keepachangelog.com/) 形式に準拠。
 
+## [0.6.11] — 2026-03-25
+
+### Added
+
+- **OpenAI プロバイダ `base_url` オーバーライド** — `providers.openai.base_url` または環境変数 `OPENAI_BASE_URL` で OpenAI API のベース URL をオーバーライド可能に。Azure OpenAI のエンドポイントを OpenAI SDK 経由で利用する場合に使用
+  - `config.py`: `OpenAIConfig.base_url` フィールド追加、`_apply_yaml()` / `_apply_env()` / `activate_profile()` で `base_url` を伝搬
+  - `providers.py`: `_create_openai_model()` で `client_params["base_url"]` を渡す
+  - `credentials.py`: `_apply_provider_config()` で OpenAI の `base_url` を適用
+  - `main.py`: `setup generate` で `base_url` 設定時に OpenAI プロバイダをエクスポートに含める
+  - プロファイルの `base_url` フィールドが OpenAI プロバイダにも対応
+
+### Fixed
+
+- **`/model` ピッカーの `(default)` 表示がモデル切り替え時に移動する問題** — `active_profile`（実行時に変化）を `default_profile` として使用していたのを、`config.default_profile`（起動時に固定）に変更。credentials / config.yaml のデフォルト設定が正しく表示されるように
+  - `config.py`: `AppConfig.default_profile` フィールド追加、`load_config()` でプロファイルアクティベート後に固定
+  - `model_picker.py`: `config.yaml` を毎回読み直すロジックを削除し `config.default_profile` を直接参照
+
+- **OpenAI プロバイダの `_model_id` 未対応** — `repl.py` の `_model_id` プロパティに `openai` プロバイダの分岐がなく、Azure AI Foundry の `model_id` にフォールスルーしていた問題を修正。`oneshot.py` にも同様の分岐を追加。`/model` 切り替え後のメッセージと `/context` 表示が正しい model_id を返すように
+
 ## [0.6.10] — 2026-03-24
 
 ### Added

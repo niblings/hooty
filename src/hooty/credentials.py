@@ -388,6 +388,8 @@ def _apply_provider_config(
     elif provider_name == "openai":
         if "model_id" in cfg:
             config.openai.model_id = cfg["model_id"]
+        if "base_url" in cfg:
+            config.openai.base_url = cfg["base_url"]
         if "max_input_tokens" in cfg:
             config.openai.max_input_tokens = cfg["max_input_tokens"]
 

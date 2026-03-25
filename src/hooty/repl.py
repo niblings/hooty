@@ -915,6 +915,8 @@ class REPL:
             return self.config.bedrock.model_id
         elif self.config.provider.value == "azure_openai":
             return self.config.azure_openai.model_id
+        elif self.config.provider.value == "openai":
+            return self.config.openai.model_id
         elif self.config.provider.value == "ollama":
             return self.config.ollama.model_id
         return self.config.azure.model_id

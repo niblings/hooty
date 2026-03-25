@@ -24,6 +24,8 @@ def _model_id(config: AppConfig) -> str:
         return config.azure.model_id
     if config.provider.value == "azure_openai":
         return config.azure_openai.model_id
+    if config.provider.value == "openai":
+        return config.openai.model_id
     return ""
 
 

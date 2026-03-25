@@ -88,6 +88,7 @@ class OpenAIConfig:
     """OpenAI direct API provider configuration."""
 
     model_id: str = "gpt-5.2"
+    base_url: str = ""  # empty = default OpenAI API endpoint
     max_input_tokens: Optional[int] = None
 
 
@@ -206,6 +207,7 @@ class AppConfig:
 
     profiles: dict[str, ProfileConfig] = field(default_factory=dict)
     active_profile: str = ""
+    default_profile: str = ""  # Fixed at startup; does not change on /model switch
     # Provider-level env vars (loaded from credentials, shared across profiles)
     provider_env: dict[str, dict[str, str]] = field(default_factory=dict)
 
@@ -378,6 +380,8 @@ class AppConfig:
                 self.azure_openai.max_input_tokens = profile.max_input_tokens
         elif profile.provider == Provider.OPENAI:
             self.openai.model_id = profile.model_id
+            if profile.base_url is not None:
+                self.openai.base_url = profile.base_url
             if profile.max_input_tokens is not None:
                 self.openai.max_input_tokens = profile.max_input_tokens
         elif profile.provider == Provider.OLLAMA:
@@ -519,6 +523,8 @@ def _apply_yaml(config: AppConfig, data: dict[str, Any]) -> None:
     openai_cfg = providers.get("openai", {})
     if "model_id" in openai_cfg:
         config.openai.model_id = openai_cfg["model_id"]
+    if "base_url" in openai_cfg:
+        config.openai.base_url = openai_cfg["base_url"]
     if "max_input_tokens" in openai_cfg:
         config.openai.max_input_tokens = openai_cfg["max_input_tokens"]
 
@@ -723,6 +729,10 @@ def _apply_env(config: AppConfig) -> None:
         config.azure_openai.deployment = deployment
     if api_version := os.environ.get("AZURE_OPENAI_API_VERSION"):
         config.azure_openai.api_version = api_version
+
+    # OpenAI
+    if base_url := os.environ.get("OPENAI_BASE_URL"):
+        config.openai.base_url = base_url
 
     # Ollama
     if host := os.environ.get("OLLAMA_HOST"):
@@ -1049,6 +1059,9 @@ def load_config(
     # Activate profile (if set)
     if config.active_profile:
         config.activate_profile(config.active_profile)
+
+    # Freeze the startup default so /model picker can show (default) correctly
+    config.default_profile = config.active_profile
 
     # Ensure config directory exists
     config.config_dir.mkdir(parents=True, exist_ok=True)

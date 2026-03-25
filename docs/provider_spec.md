@@ -414,7 +414,7 @@ pip install hooty[azure-openai]
 
 ### 概要
 
-直接 OpenAI API（`api.openai.com`）を介して GPT モデルにアクセスする。`agno.models.openai.OpenAIChat` クラスを使用。Azure OpenAI Service 経由ではなく、OpenAI の直接 API を使う場合に選択する。
+直接 OpenAI API（`api.openai.com`）を介して GPT モデルにアクセスする。`agno.models.openai.OpenAIChat` クラスを使用。Azure OpenAI Service 経由ではなく、OpenAI の直接 API を使う場合に選択する。`base_url` を設定することで、Azure OpenAI のエンドポイントを OpenAI SDK 経由で利用することも可能。
 
 ### 対応モデル
 
@@ -444,7 +444,24 @@ Agno への渡し方:
 OpenAIChat(
     id=config.openai.model_id,
     api_key=get_secret("OPENAI_API_KEY"),
+    client_params={"base_url": config.openai.base_url},  # base_url 設定時のみ
 )
+```
+
+### ベース URL オーバーライド
+
+`base_url` を設定すると、OpenAI SDK のリクエスト先を変更できる。Azure OpenAI のエンドポイントを OpenAI SDK 経由で利用する場合などに使用する。
+
+設定方法（優先順位: 環境変数 > config.yaml）:
+
+```bash
+export OPENAI_BASE_URL=https://your-resource.openai.azure.com/openai
+```
+
+```yaml
+providers:
+  openai:
+    base_url: "https://your-resource.openai.azure.com/openai"
 ```
 
 ### Reasoning（`reasoning_effort`）対応
@@ -457,6 +474,7 @@ Azure OpenAI Service と同様、GPT-5.2+ は `reasoning_effort` パラメータ
 providers:
   openai:
     model_id: gpt-5.2
+    # base_url: "https://your-resource.openai.azure.com/openai"  # Azure OpenAI 経由の場合
 
 profiles:
   openai-gpt54:
@@ -465,6 +483,10 @@ profiles:
   openai-codex:
     provider: openai
     model_id: gpt-5.3-codex
+  openai-via-azure:
+    provider: openai
+    model_id: gpt-5.2
+    base_url: "https://your-resource.openai.azure.com/openai"
 ```
 
 ### 必要パッケージ

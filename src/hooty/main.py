@@ -471,8 +471,11 @@ def setup_generate(
     openai_key = os.environ.get("OPENAI_API_KEY", "")
     if openai_key:
         openai_env["OPENAI_API_KEY"] = openai_key
-    if openai_env:
-        providers["openai"] = ProviderCredential(config={}, env=openai_env)
+    if openai_env or config.openai.base_url:
+        openai_cfg: dict[str, Any] = {}
+        if config.openai.base_url:
+            openai_cfg["base_url"] = config.openai.base_url
+        providers["openai"] = ProviderCredential(config=openai_cfg, env=openai_env)
 
     # Collect Bedrock config
     # Note: AWS_BEARER_TOKEN_BEDROCK is excluded — it is a user-side

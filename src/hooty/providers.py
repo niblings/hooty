@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import Any, TYPE_CHECKING
 
 import httpx
 
@@ -256,10 +256,13 @@ def _create_openai_model(config: AppConfig) -> Model:
         )
 
     timeout = _build_httpx_timeout(config, streaming=config.stream)
+    client_params: dict[str, Any] = {"timeout": timeout}
+    if config.openai.base_url:
+        client_params["base_url"] = config.openai.base_url
     return OpenAIChat(
         id=config.openai.model_id,
         api_key=get_secret("OPENAI_API_KEY"),
-        client_params={"timeout": timeout},
+        client_params=client_params,
     )
 
 

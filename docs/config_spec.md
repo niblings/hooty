@@ -248,6 +248,7 @@ roles:
 | フィールド | 型 | デフォルト | 説明 |
 |---|---|---|---|
 | `model_id` | `string` | `"gpt-5.2"` | OpenAI モデル ID |
+| `base_url` | `string` | `""` | ベース URL。空文字 = デフォルト OpenAI API エンドポイント。Azure OpenAI エンドポイントを OpenAI SDK 経由で利用する場合などに設定 |
 | `max_input_tokens` | `int` | `null` | コンテキストウィンドウサイズの上書き（省略時は同梱カタログ → 200,000） |
 
 #### `providers.ollama` セクション
@@ -274,7 +275,7 @@ roles:
 | `host` | `string` | | Ollama: サーバーアドレスのオーバーライド |
 | `sso_auth` | `bool` | | Bedrock: SSO 認証のオーバーライド |
 | `max_input_tokens` | `int` | | コンテキストウィンドウサイズのオーバーライド |
-| `base_url` | `string` | | Anthropic: エンドポイント URL のオーバーライド |
+| `base_url` | `string` | | Anthropic / OpenAI: エンドポイント URL のオーバーライド |
 
 #### `roles` セクション
 
@@ -800,6 +801,7 @@ databases.yaml はスラッシュコマンドで管理する:
 | `AZURE_OPENAI_DEPLOYMENT` | `providers.azure_openai.deployment` | Azure OpenAI デプロイメント名 |
 | `AZURE_OPENAI_API_VERSION` | `providers.azure_openai.api_version` | Azure OpenAI API バージョン |
 | `OPENAI_API_KEY` | OpenAI API キー | OpenAI 直接 API の認証キー |
+| `OPENAI_BASE_URL` | `providers.openai.base_url` | OpenAI API ベース URL のオーバーライド |
 | `OLLAMA_HOST` | `providers.ollama.host` | Ollama サーバーアドレス |
 | `GITHUB_ACCESS_TOKEN` | GitHub トークン | GitHub API の認証 |
 

@@ -213,21 +213,9 @@ def pick_profile(config: "AppConfig", console: "Console") -> Optional[str]:
 
     profile_names = list(config.profiles.keys())
 
-    # Determine default profile from config.yaml, fall back to active_profile
-    # (covers credentials-only setups where config.yaml may not exist)
-    default_profile = ""
-    try:
-        import yaml
-
-        if config.config_file_path.exists():
-            with open(config.config_file_path, encoding="utf-8") as f:
-                data = yaml.safe_load(f)
-            if data:
-                default_profile = data.get("default", {}).get("profile", "")
-    except Exception:
-        pass
-    if not default_profile and config.active_profile:
-        default_profile = config.active_profile
+    # Use the startup-time default (frozen in load_config), not active_profile
+    # which changes on /model switch.
+    default_profile = config.default_profile
 
     if sys.stdin.isatty():
         return _pick_interactive(profile_names, config, default_profile, console)
